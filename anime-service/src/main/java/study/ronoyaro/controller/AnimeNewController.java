@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 public class AnimeNewController {
     @GetMapping
-    public List<Anime> listAll(@RequestParam(required = false) String name) {
+    public List<Anime> list(@RequestParam(required = false) String name) {
         if (name == null) return Anime.getAnimes();
 
         return Anime.getAnimes().stream()

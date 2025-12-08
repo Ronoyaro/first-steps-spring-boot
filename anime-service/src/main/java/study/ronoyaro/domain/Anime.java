@@ -13,16 +13,13 @@ import java.util.List;
 public class Anime {
     private Long id;
     private String name;
-    private static List<Anime> animeList = new ArrayList<>();
+    @Getter
+    private static List<Anime> animes = new ArrayList<>();
 
     static {
         var dbz = new Anime(1L, "Dragon Ball");
         var yuyuHakusho = new Anime(2L, "Yuyu Hakusho");
-        animeList.addAll(List.of(dbz, yuyuHakusho));
-    }
-
-    public static List<Anime> getAnimes() {
-        return animeList;
+        animes.addAll(List.of(dbz, yuyuHakusho));
     }
 
     @Override
