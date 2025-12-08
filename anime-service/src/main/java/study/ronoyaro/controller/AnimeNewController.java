@@ -1,12 +1,15 @@
 package study.ronoyaro.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import study.ronoyaro.domain.Anime;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("v1/animes")
+@Slf4j
 public class AnimeNewController {
     @GetMapping
     public List<Anime> listAll(@RequestParam(required = false) String name) {
@@ -26,5 +29,11 @@ public class AnimeNewController {
                 .orElse(null);
     }
 
-
+    @PostMapping
+    public Anime save(@RequestBody Anime anime) {
+        anime.setId(ThreadLocalRandom.current().nextLong(1, 300));
+        Anime.getAnimes().add(anime);
+        log.info("anime '{}' saved", anime);
+        return anime;
+    }
 }
