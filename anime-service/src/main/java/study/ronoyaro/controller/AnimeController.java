@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping(value = "v1/animes")
+@RequestMapping(value = "v1/1/animes")
 @Slf4j
 public class AnimeController {
 

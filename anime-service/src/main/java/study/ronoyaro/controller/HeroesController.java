@@ -27,7 +27,7 @@ public class HeroesController {
     @GetMapping("filterList")
     public List<String> listHeroesByParamsList(@RequestParam List<String> names) {
         return HEROES.stream()
-                .filter(n -> names.contains(n))
+                .filter(names::contains)
                 .toList();
     }
 }
