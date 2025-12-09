@@ -1,18 +1,22 @@
 package study.ronoyaro.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.ronoyaro.domain.Producer;
+import study.ronoyaro.mapper.ProducerMapper;
+import study.ronoyaro.request.ProducerPostRequest;
+import study.ronoyaro.response.ProducerGetResponse;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("v1/producers")
 @Slf4j
 public class ProducerController {
+    public static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
 
     @GetMapping
     public List<Producer> list(@RequestParam(required = false) String name) {
@@ -32,13 +36,15 @@ public class ProducerController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key=1234")
-    public Producer save(@RequestBody Producer producer, @RequestHeader HttpHeaders headers) {
-        log.info("Producer '{}' saved", producer.getName());
-        log.info("All headers '{}' ", headers);
-        producer.setId(ThreadLocalRandom.current().nextLong(1, 50));
-        Producer.getProducers()
-                .add(producer);
-        return producer;
+    public ResponseEntity<ProducerGetResponse> save(@RequestBody ProducerPostRequest producerPostRequest) {
+
+        var producer = MAPPER.toProducer(producerPostRequest);
+        var response = MAPPER.toProducerResponse(producer);
+
+        Producer.getProducers().add(producer);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
     }
 
 }
