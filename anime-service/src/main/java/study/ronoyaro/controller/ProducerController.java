@@ -40,6 +40,7 @@ public class ProducerController {
 
         var producer = MAPPER.toProducer(producerPostRequest);
         var response = MAPPER.toProducerResponse(producer);
+        log.info("response?'{}'", response);
 
         Producer.getProducers().add(producer);
 

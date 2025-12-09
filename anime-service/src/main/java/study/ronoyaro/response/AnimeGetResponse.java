@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class ProducerGetResponse {
+public class AnimeGetResponse {
     private Long id;
     private String name;
     private LocalDateTime createdAt;
 }
+

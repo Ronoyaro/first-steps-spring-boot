@@ -1,23 +1,50 @@
 package study.ronoyaro.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import study.ronoyaro.domain.Anime;
+import study.ronoyaro.mapper.AnimeMapper;
+import study.ronoyaro.request.AnimePostRequest;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping(value = "v1/1/animes")
+@RequestMapping("v1/animes")
 @Slf4j
 public class AnimeController {
+    public static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
 
     @GetMapping
-    public List<String> listAll() throws InterruptedException {
-        log.info(Thread.currentThread().getName());
-        TimeUnit.SECONDS.sleep(1); //Digamos que levou 1seg o processo
-        return List.of("Kimetsu no Yaiba", "Noragami", "Yuyu Hakusho");
+    public List<Anime> list(@RequestParam(required = false) String name) {
+        if (name == null) return Anime.getAnimes();
+
+        return Anime.getAnimes().stream()
+                .filter(a -> a.getName().equals(name))
+                .toList();
     }
 
+    @GetMapping("{id}")
+    public Anime filterById(@PathVariable Long id) {
+        return Anime.getAnimes()
+                .stream()
+                .filter(a -> a.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @PostMapping
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequest animePostRequest) {
+
+        var anime = MAPPER.toAnime(animePostRequest);
+        var animeResponse = MAPPER.toAnimeResponse(anime);
+
+        log.info("anime saved'{}'", animeResponse);
+
+        Anime.getAnimes()
+                .add(anime);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(anime);
+    }
 }
