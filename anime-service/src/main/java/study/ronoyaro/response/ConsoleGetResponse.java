@@ -7,11 +7,11 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
 @Setter
+@Builder
 @ToString
-public class ProducerGetResponse {
+public class ConsoleGetResponse {
     private Long id;
     private String name;
     private LocalDateTime createdAt;

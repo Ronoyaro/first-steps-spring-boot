@@ -4,7 +4,9 @@ spring:
   threads:
     virtual:
       enabled: true
-
+logging:
+  level:
+    study.ronoyaro: debug
 server:
   servlet:
     context-path: /
@@ -13,3 +15,4 @@ server:
   tomcat:
     threads:
       max: 20
+

@@ -2,9 +2,7 @@ package study.ronoyaro.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Producer {
+    @EqualsAndHashCode.Include
     private Long id;
     @JsonProperty("name") //Serve para serialização do Jackson quando a requisição pode vir com outro nome no atributo
     private String name;
@@ -29,11 +30,4 @@ public class Producer {
         producers.addAll(List.of(mappa, kyotoAnimation, madhouse));
     }
 
-    @Override
-    public String toString() {
-        return "Producer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

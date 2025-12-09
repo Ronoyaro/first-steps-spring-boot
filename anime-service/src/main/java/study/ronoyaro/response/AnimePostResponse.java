@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class ProducerGetResponse {
+public class AnimePostResponse {
     private Long id;
     private String name;
     private LocalDateTime createdAt;

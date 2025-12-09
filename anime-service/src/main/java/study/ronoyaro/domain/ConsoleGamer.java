@@ -1,44 +1,42 @@
 package study.ronoyaro.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-
 @Getter
 @Setter
 @Builder
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Anime {
-    @EqualsAndHashCode.Include //Estou dizendo que o ID é o mesmo que tá sendo comparado
+public class ConsoleGamer {
     private Long id;
     private String name;
     private LocalDateTime createdAt;
     @Getter
-    private static List<Anime> animes = new ArrayList<>();
+    private static List<ConsoleGamer> consoles = new ArrayList<>();
 
     static {
-        var dbz = Anime.builder()
+        var ps5 = ConsoleGamer.builder()
                 .id(1L)
-                .name("Dragon Ball Z")
+                .name("Playstation 5")
                 .createdAt(LocalDateTime.now())
                 .build();
-
-        var yuyu = Anime.builder()
+        var xbox = ConsoleGamer.builder()
                 .id(2L)
-                .name("Yuyu Hakusho")
+                .name("Xbox Series X")
                 .createdAt(LocalDateTime.now())
                 .build();
-        var onePiece = Anime.builder()
-                .id(3L)
-                .name("One Piece")
+        var nintendoSwitch = ConsoleGamer.builder()
+                .id(ThreadLocalRandom.current().nextLong(1, 150))
+                .name("Nintendo Switch")
                 .createdAt(LocalDateTime.now())
                 .build();
-        animes.addAll(List.of(dbz, yuyu, onePiece));
+        consoles.addAll(List.of(ps5, xbox, nintendoSwitch));
     }
-
 }

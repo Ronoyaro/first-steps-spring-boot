@@ -5,7 +5,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import study.ronoyaro.domain.Producer;
 import study.ronoyaro.request.ProducerPostRequest;
+import study.ronoyaro.request.ProducerPutRequest;
 import study.ronoyaro.response.ProducerGetResponse;
+import study.ronoyaro.response.ProducerPostResponse;
+
+import java.time.LocalDateTime;
 
 @Mapper
 public interface ProducerMapper {
@@ -15,8 +19,10 @@ public interface ProducerMapper {
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(1, 200))")
     Producer toProducer(ProducerPostRequest postRequest);
+    Producer toProducer(ProducerPutRequest putRequest, LocalDateTime createdAt);
 
     /*Transformando o Producer em ProducerResponse*/
-    ProducerGetResponse toProducerResponse(Producer producer);
+    ProducerGetResponse toProducerGetResponse(Producer producer);
+    ProducerPostResponse toProducerPostResponse(Producer producer);
 
 }
