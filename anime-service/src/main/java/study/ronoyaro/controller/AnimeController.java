@@ -59,7 +59,7 @@ public class AnimeController {
         var anime = MAPPER.toAnime(animePostRequest);
         var animePostResponse = MAPPER.toAnimePostResponse(anime);
 
-        log.info("Request to save anime '{}'", animePostResponse);
+        log.debug("Request to save anime '{}'", animePostResponse);
 
 
         Anime.getAnimes()
