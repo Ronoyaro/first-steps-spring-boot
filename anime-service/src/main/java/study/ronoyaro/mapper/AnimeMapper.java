@@ -9,7 +9,7 @@ import study.ronoyaro.request.AnimePutRequest;
 import study.ronoyaro.response.AnimeGetResponse;
 import study.ronoyaro.response.AnimePostResponse;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface AnimeMapper {
@@ -20,11 +20,12 @@ public interface AnimeMapper {
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     Anime toAnime(AnimePostRequest animePostRequest);
 
-    Anime toAnime(AnimePutRequest animePutRequest, LocalDateTime createdAt);
+    Anime toAnime(AnimePutRequest animePutRequest);
 
     AnimeGetResponse toAnimeResponse(Anime anime);
 
     AnimePostResponse toAnimePostResponse(Anime anime);
 
+    List<AnimeGetResponse> toAnimeListResponses(List<Anime> animes);
 
 }

@@ -9,7 +9,6 @@ import study.ronoyaro.request.ProducerPutRequest;
 import study.ronoyaro.response.ProducerGetResponse;
 import study.ronoyaro.response.ProducerPostResponse;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -20,13 +19,15 @@ public interface ProducerMapper {
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(1, 200))")
     Producer toProducer(ProducerPostRequest postRequest);
+
     Producer toProducer(ProducerPutRequest putRequest);
 
     /*Transformando o Producer em ProducerResponse*/
     ProducerGetResponse toProducerGetResponse(Producer producer);
+
     ProducerPostResponse toProducerPostResponse(Producer producer);
 
     /*Transforma uma lista de Producers para uma lista de ProducersGetResponse*/
-    List<ProducerGetResponse> toProducerListGetResponse (List<Producer> producers);
+    List<ProducerGetResponse> toProducerListGetResponse(List<Producer> producers);
 
 }

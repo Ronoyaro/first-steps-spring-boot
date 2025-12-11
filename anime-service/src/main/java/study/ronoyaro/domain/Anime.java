@@ -3,9 +3,6 @@ package study.ronoyaro.domain;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 @Getter
@@ -18,27 +15,4 @@ public class Anime {
     private Long id;
     private String name;
     private LocalDateTime createdAt;
-    @Getter
-    private static List<Anime> animes = new ArrayList<>();
-
-    static {
-        var dbz = Anime.builder()
-                .id(1L)
-                .name("Dragon Ball Z")
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        var yuyu = Anime.builder()
-                .id(2L)
-                .name("Yuyu Hakusho")
-                .createdAt(LocalDateTime.now())
-                .build();
-        var onePiece = Anime.builder()
-                .id(3L)
-                .name("One Piece")
-                .createdAt(LocalDateTime.now())
-                .build();
-        animes.addAll(List.of(dbz, yuyu, onePiece));
-    }
-
 }
