@@ -2,7 +2,7 @@ package study.ronoyaro.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.MappingConstants;
 import study.ronoyaro.domain.Producer;
 import study.ronoyaro.request.ProducerPostRequest;
 import study.ronoyaro.request.ProducerPutRequest;
@@ -11,9 +11,8 @@ import study.ronoyaro.response.ProducerPostResponse;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProducerMapper {
-    ProducerMapper INSTANCE = Mappers.getMapper(ProducerMapper.class);
 
     /*Serve para eu pegar um source para um target*/
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")

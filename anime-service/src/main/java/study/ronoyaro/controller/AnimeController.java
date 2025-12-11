@@ -1,5 +1,6 @@
 package study.ronoyaro.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("v1/animes")
 @Slf4j
+@RequiredArgsConstructor
 public class AnimeController {
-    public static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
+    private final AnimeMapper mapper;
     private final AnimeService service;
-
-    public AnimeController() {
-        this.service = new AnimeService();
-    }
 
     @GetMapping
     public ResponseEntity<List<AnimeGetResponse>> list(@RequestParam(required = false) String name) {
@@ -32,7 +30,7 @@ public class AnimeController {
 
         var animes = service.findAll(name);
 
-        var animeListGetResponses = MAPPER.toAnimeListResponses(animes);
+        var animeListGetResponses = mapper.toAnimeListResponses(animes);
 
         return ResponseEntity.ok(animeListGetResponses);
     }
@@ -44,7 +42,7 @@ public class AnimeController {
 
         Anime anime = service.findByIdOrThrowNotFound(id);
 
-        var animeResponse = MAPPER.toAnimeResponse(anime);
+        var animeResponse = mapper.toAnimeResponse(anime);
 
         return ResponseEntity.ok(animeResponse);
     }
@@ -54,11 +52,11 @@ public class AnimeController {
 
         log.debug("Request to save anime '{}'", animePostRequest.getName());
 
-        var anime = MAPPER.toAnime(animePostRequest);
+        var anime = mapper.toAnime(animePostRequest);
 
         Anime animeSaved = service.save(anime);
 
-        var animePostResponse = MAPPER.toAnimePostResponse(animeSaved);
+        var animePostResponse = mapper.toAnimePostResponse(animeSaved);
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(animePostResponse);
@@ -77,7 +75,7 @@ public class AnimeController {
     public ResponseEntity<Void> update(@RequestBody AnimePutRequest animePutRequest) {
         log.debug("Request to update Anime '{}'", animePutRequest.getName());
 
-        Anime animeToUpdate = MAPPER.toAnime(animePutRequest);
+        Anime animeToUpdate = mapper.toAnime(animePutRequest);
 
         service.update(animeToUpdate);
 

@@ -1,18 +1,19 @@
 package study.ronoyaro.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import study.ronoyaro.domain.Anime;
 import study.ronoyaro.repository.AnimeHardCodedRepository;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class AnimeService {
-    private AnimeHardCodedRepository repository;
+    private final AnimeHardCodedRepository repository;
 
-    public AnimeService() {
-        this.repository = new AnimeHardCodedRepository();
-    }
 
     public List<Anime> findAll(String name) {
         return name == null ? repository.listAll() : repository.findByName(name);

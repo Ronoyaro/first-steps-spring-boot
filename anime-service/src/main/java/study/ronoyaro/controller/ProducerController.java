@@ -1,5 +1,6 @@
 package study.ronoyaro.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,13 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping("v1/producers")
 @Slf4j
+@RequiredArgsConstructor
 public class ProducerController {
-    private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
-    private ProducerService service;
-
-    public ProducerController() {
-        this.service = new ProducerService();
-    }
+    private final ProducerMapper mapper;
+    private final ProducerService service;
 
     @GetMapping
     public ResponseEntity<List<ProducerGetResponse>> listAll(@RequestParam(required = false) String name) {
@@ -32,7 +30,7 @@ public class ProducerController {
 
         var producers = service.findAll(name);
 
-        var producerListGetResponse = MAPPER.toProducerListGetResponse(producers);
+        var producerListGetResponse = mapper.toProducerListGetResponse(producers);
 
         return ResponseEntity.ok(producerListGetResponse);
     }
@@ -43,7 +41,7 @@ public class ProducerController {
 
         var producer = service.findByIdOrThrowNotFound(id);
 
-        var producerGetResponse = MAPPER.toProducerGetResponse(producer);
+        var producerGetResponse = mapper.toProducerGetResponse(producer);
 
         return ResponseEntity.ok(producerGetResponse);
     }
@@ -53,11 +51,11 @@ public class ProducerController {
 
         log.debug("Request do save Producer '{}'", producerPostRequest.getName());
 
-        var producer = MAPPER.toProducer(producerPostRequest);
+        var producer = mapper.toProducer(producerPostRequest);
 
         Producer producerSaved = service.save(producer);
 
-        var response = MAPPER.toProducerPostResponse(producerSaved);
+        var response = mapper.toProducerPostResponse(producerSaved);
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -79,7 +77,7 @@ public class ProducerController {
 
         log.debug("Request to update Producer '{}'", producerPutRequest.getName());
 
-        var producerToUpdate = MAPPER.toProducer(producerPutRequest);
+        var producerToUpdate = mapper.toProducer(producerPutRequest);
 
         service.update(producerToUpdate);
 
