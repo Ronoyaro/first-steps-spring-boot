@@ -1,7 +1,9 @@
 package study.ronoyaro.controller;
 
+import external.dependecy.Connection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ import java.util.List;
 public class ProducerController {
     private final ProducerMapper mapper;
     private final ProducerService service;
+    @Qualifier(value = "connectionMongoDB")
+    private final Connection connection;
 
     @GetMapping
     public ResponseEntity<List<ProducerGetResponse>> listAll(@RequestParam(required = false) String name) {
@@ -38,6 +42,7 @@ public class ProducerController {
     @GetMapping("{id}")
     public ResponseEntity<ProducerGetResponse> filterById(@PathVariable Long id) {
         log.debug("Request to find producer by id: '{}'", id);
+        log.debug("'{}'", connection); //injetado e buscando
 
         var producer = service.findByIdOrThrowNotFound(id);
 
