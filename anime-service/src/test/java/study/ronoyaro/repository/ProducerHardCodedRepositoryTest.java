@@ -20,7 +20,7 @@ class ProducerHardCodedRepositoryTest {
     private ProducerHardCodedRepository repository;
     @Mock
     private ProducerData producerData;
-    private final List<Producer> mockitoProducers = new ArrayList<>();
+    private List<Producer> mockitoProducers;
 
     @BeforeEach
     void init() {
@@ -37,7 +37,7 @@ class ProducerHardCodedRepositoryTest {
                 .name("Ufotable")
                 .createdAt(LocalDateTime.now())
                 .build();
-        mockitoProducers.addAll(List.of(aniplex, studioGhibli, ufotable));
+        mockitoProducers = new ArrayList<>(List.of(aniplex, studioGhibli, ufotable));
     }
 
     @Test

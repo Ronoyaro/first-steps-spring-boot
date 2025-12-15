@@ -21,7 +21,7 @@ class AnimeHardCodedRepositoryTest {
     @Mock
     private AnimeData animeData;
 
-    private final List<Anime> mockitoAnimes = new ArrayList<>();
+    private List<Anime> mockitoAnimes;
 
     @BeforeEach
     void init() {
@@ -41,7 +41,7 @@ class AnimeHardCodedRepositoryTest {
                 .name("Globin Slayer")
                 .createdAt(LocalDateTime.now())
                 .build();
-        mockitoAnimes.addAll(List.of(yugioh, kimetsu, goblinSlayer));
+        mockitoAnimes = new ArrayList<>(List.of(yugioh, kimetsu, goblinSlayer));
     }
 
     @Test
@@ -51,12 +51,12 @@ class AnimeHardCodedRepositoryTest {
 
         BDDMockito.when(animeData.getAnimes()).thenReturn(mockitoAnimes);
 
-        var animesExpcted = repository.listAll();
+        var animesExpected = repository.listAll();
 
-        Assertions.assertThat(animesExpcted)
+        Assertions.assertThat(animesExpected)
                 .isNotNull()
                 .isNotEmpty()
-                .hasSize(mockitoAnimes.size());
+                .hasSameElementsAs(mockitoAnimes);
     }
 
     @Test
@@ -148,7 +148,7 @@ class AnimeHardCodedRepositoryTest {
 
         var animeToUpdate = Anime.builder()
                 .id(animeSource.getId())
-                .name("BokuNoPico")
+                .name("Boku No Pico")
                 .createdAt(LocalDateTime.now())
                 .build();
         repository.update(animeToUpdate);
