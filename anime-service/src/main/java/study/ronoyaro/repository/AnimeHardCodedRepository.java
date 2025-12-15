@@ -1,5 +1,6 @@
 package study.ronoyaro.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import study.ronoyaro.domain.Anime;
 
@@ -9,52 +10,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class AnimeHardCodedRepository {
-    private static final List<Anime> ANIMES = new ArrayList<>();
-
-    static {
-        var dbz = Anime.builder()
-                .id(1L)
-                .name("Dragon Ball Z")
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        var yuyu = Anime.builder()
-                .id(2L)
-                .name("Yuyu Hakusho")
-                .createdAt(LocalDateTime.now())
-                .build();
-        var onePiece = Anime.builder()
-                .id(3L)
-                .name("One Piece")
-                .createdAt(LocalDateTime.now())
-                .build();
-        ANIMES.addAll(List.of(dbz, yuyu, onePiece));
-    }
+    private final AnimeData animeData;
 
     public List<Anime> listAll() {
-        return ANIMES;
+        return animeData.getAnimes();
     }
 
     public List<Anime> findByName(String name) {
-        return ANIMES.stream()
+        return animeData.getAnimes().stream()
                 .filter(anime -> anime.getName().equalsIgnoreCase(name))
                 .toList();
     }
 
     public Optional<Anime> findById(Long id) {
-        return ANIMES.stream()
+        return animeData.getAnimes().stream()
                 .filter(anime -> anime.getId().equals(id))
                 .findFirst();
     }
 
     public Anime save(Anime anime) {
-        ANIMES.add(anime);
+        animeData.getAnimes().add(anime);
         return anime;
     }
 
     public void delete(Anime anime) {
-        ANIMES.remove(anime);
+        animeData.getAnimes().remove(anime);
     }
 
     public void update(Anime anime) {

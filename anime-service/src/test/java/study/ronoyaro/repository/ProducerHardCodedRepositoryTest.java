@@ -58,7 +58,8 @@ class ProducerHardCodedRepositoryTest {
     void findById_ReturnsProducer_WhenSucessFul() {
         BDDMockito.when(producerData.getProducers()).thenReturn(mockitoProducers);
         var producerExpected = mockitoProducers.getFirst();
-        Assertions.assertThat(repository.findById(producerExpected.getId())).isPresent().contains(producerExpected);
+        var producerFound = repository.findById(producerExpected.getId());
+        Assertions.assertThat(producerFound).isPresent().contains(producerExpected);
     }
 
     @Test
