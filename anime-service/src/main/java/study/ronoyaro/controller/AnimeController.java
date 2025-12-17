@@ -66,7 +66,7 @@ public class AnimeController {
     public ResponseEntity<Void> deleteByiId(@PathVariable Long id) {
         log.debug("Request to delete Anime by id '{}'", id);
 
-        service.deleteById(id);
+        service.delete(id);
 
         return ResponseEntity.noContent().build();
     }

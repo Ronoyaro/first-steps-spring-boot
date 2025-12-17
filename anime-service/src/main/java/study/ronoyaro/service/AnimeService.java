@@ -28,7 +28,7 @@ public class AnimeService {
         return repository.save(anime);
     }
 
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         Anime anime = findByIdOrThrowNotFound(id);
         repository.delete(anime);
     }
