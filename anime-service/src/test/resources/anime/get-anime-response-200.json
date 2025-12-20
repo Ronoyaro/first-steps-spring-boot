@@ -1,17 +1,17 @@
 [
   {
     "id": 1,
-    "name": "Aniplex",
+    "name": "Steins gate",
     "createdAt": "2025-12-18T16:39:24.3500076"
   },
   {
     "id": 2,
-    "name": "Studio Ghibli",
+    "name": "Fate Zero",
     "createdAt": "2025-12-18T16:39:24.3500076"
   },
   {
     "id": 3,
-    "name": "Ufotable",
+    "name": "Cowboy Bebop",
     "createdAt": "2025-12-18T16:39:24.3500076"
   }
 ]

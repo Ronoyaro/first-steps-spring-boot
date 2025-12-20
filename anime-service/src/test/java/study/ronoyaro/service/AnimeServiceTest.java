@@ -9,11 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
+import study.ronoyaro.commons.MockAnimeListUtils;
 import study.ronoyaro.domain.Anime;
 import study.ronoyaro.repository.AnimeHardCodedRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -21,31 +21,21 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AnimeServiceTest {
+
     @InjectMocks
     private AnimeService service;
+
     @Mock
     private AnimeHardCodedRepository repository;
-    private List<Anime> mockitoAnime;
+
+    @InjectMocks
+    private MockAnimeListUtils animeListUtils;
+
+    private List<Anime> animeList;
 
     @BeforeEach
     void init() {
-        Anime deathNote = Anime.builder()
-                .id(1L)
-                .name("Death Note")
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        Anime vinlandSaga = Anime.builder()
-                .id(2L)
-                .name("Vinland Saga")
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        Anime fullMetal = Anime.builder()
-                .id(3L)
-                .name("Full Metal Alchemist: Brotherhood")
-                .build();
-        mockitoAnime = new ArrayList<>(List.of(deathNote, fullMetal, vinlandSaga));
+        animeList = animeListUtils.getList();
     }
 
     @Test
@@ -53,12 +43,12 @@ class AnimeServiceTest {
     @DisplayName("listAll returns an Anime List when the name argument is null")
     void listAll_ReturnsAnAnimeList_WhenNameArgumentIsNull() {
 
-        BDDMockito.when(repository.listAll()).thenReturn(mockitoAnime);
+        BDDMockito.when(repository.listAll()).thenReturn(animeList);
 
         var listAnimeExpected = service.findAll(null);
 
         Assertions.assertThat(listAnimeExpected)
-                .hasSameElementsAs(mockitoAnime);
+                .hasSameElementsAs(animeList);
 
     }
 
@@ -66,7 +56,7 @@ class AnimeServiceTest {
     @Order(2)
     @DisplayName("listAll returns a list with animes founds when the name passed by argument exists")
     void listAll_ReturnsAnAnimeList_WhenTheNameArgumentExists() {
-        var anime = mockitoAnime.getFirst();
+        var anime = animeList.getFirst();
 
         var singletonList = singletonList(anime);
 
@@ -96,7 +86,7 @@ class AnimeServiceTest {
     @Order(4)
     @DisplayName("Find by id returns an Anime when Successful")
     void findById_ReturnsAnAnime_WhenSuccessful() {
-        var anime = mockitoAnime.getFirst();
+        var anime = animeList.getFirst();
 
         BDDMockito.when(repository.findById(anime.getId())).thenReturn(Optional.of(anime));
 
@@ -108,7 +98,7 @@ class AnimeServiceTest {
     @Order(5)
     @DisplayName("Find by id throws a ResponseStatusException when the Anime is not found")
     void findById_ReturnsAnResponseStatusHTTPException_WhenAnimeIsNotFound() {
-        var anime = mockitoAnime.getFirst();
+        var anime = animeList.getFirst();
 
         BDDMockito.when(repository.findById(anime.getId())).thenReturn(Optional.empty());
 
@@ -141,7 +131,7 @@ class AnimeServiceTest {
     @DisplayName("Delete removes an anime when the given id exists")
     void delete_RemovesAnAnime_WhenSucessful() {
 
-        var animeToDelete = mockitoAnime.getFirst();
+        var animeToDelete = animeList.getFirst();
 
         BDDMockito.when(repository.findById(animeToDelete.getId())).thenReturn(Optional.of(animeToDelete));
 
@@ -156,7 +146,7 @@ class AnimeServiceTest {
     @DisplayName("Deletes throws a ResponseStatusException when the anime doesnt exists")
     void delete_ThrowsAException_WhenTheAnimeIsNotFound() {
 
-        Anime animeToDelete = mockitoAnime.getFirst();
+        Anime animeToDelete = animeList.getFirst();
 
         BDDMockito.when(repository.findById(animeToDelete.getId())).thenReturn(Optional.empty());
 
@@ -169,7 +159,7 @@ class AnimeServiceTest {
     @Order(9)
     @DisplayName("Update updates an anime when successful")
     void update_UpdatesAnAnime_whenSuccessful() {
-        Anime animeToUpdate = mockitoAnime.getFirst();
+        Anime animeToUpdate = animeList.getFirst();
 
         animeToUpdate.setName("Inazuma Eleven");
 
@@ -184,8 +174,8 @@ class AnimeServiceTest {
     @Test
     @Order(10)
     @DisplayName("Updates throws a ResponseStatusException when the anime doesnt exists")
-    void update_ThrowsAnException_WhenTheAnimeIsNotFound(){
-        Anime animeToUpdate = mockitoAnime.getFirst();
+    void update_ThrowsAnException_WhenTheAnimeIsNotFound() {
+        Anime animeToUpdate = animeList.getFirst();
 
         animeToUpdate.setName("Saint Seiya");
 
@@ -197,8 +187,6 @@ class AnimeServiceTest {
 
 
     }
-
-
 
 
     private static @NonNull List<Anime> singletonList(Anime listAnimesExpected) {

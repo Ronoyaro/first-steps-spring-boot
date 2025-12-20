@@ -10,11 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
+import study.ronoyaro.commons.MockProducerListUtils;
 import study.ronoyaro.domain.Producer;
 import study.ronoyaro.repository.ProducerHardCodedRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,24 +26,14 @@ class ProducerServiceTest {
     private ProducerService service;
     @Mock
     private ProducerHardCodedRepository repository;
+    @InjectMocks
+    private MockProducerListUtils producersUtils;
+
     private List<Producer> producerList;
 
     @BeforeEach
     void init() {
-        var aniplex = Producer.builder()
-                .id(1L)
-                .name("Aniplex")
-                .createdAt(LocalDateTime.now()).build();
-        var studioGhibli = Producer.builder()
-                .id(2L).name("Studio Ghibli")
-                .createdAt(LocalDateTime.now())
-                .build();
-        var ufotable = Producer.builder()
-                .id(3L)
-                .name("Ufotable")
-                .createdAt(LocalDateTime.now())
-                .build();
-        producerList = new ArrayList<>(List.of(aniplex, studioGhibli, ufotable));
+        producerList = producersUtils.getList();
     }
 
     @Test
@@ -192,7 +182,6 @@ class ProducerServiceTest {
                 .isInstanceOf(ResponseStatusException.class);
 
     }
-
 
 
     private static @NonNull List<Producer> singletonList(Producer producer) {

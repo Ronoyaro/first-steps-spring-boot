@@ -12,7 +12,8 @@ import java.util.List;
 @Getter
 public class ProducerData {
     private final List<Producer> producers = new ArrayList<>();
-    {
+
+    public ProducerData() {
         var mappa = Producer.builder()
                 .id(1L)
                 .name("Mappa")
@@ -29,6 +30,10 @@ public class ProducerData {
                 .createdAt(LocalDateTime.now())
                 .build();
         producers.addAll(List.of(mappa, kyotoAnimation, madhouse));
+    }
+
+    public List<Producer> getProducers() {
+        return producers;
     }
 
 }
