@@ -1,9 +1,8 @@
 package study.ronoyaro.controller;
 
-import external.dependecy.Connection;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,8 @@ import java.util.List;
 public class ProducerController {
     private final ProducerMapper mapper;
     private final ProducerService service;
-    @Qualifier(value = "connectionMongoDB")
-    private final Connection connection;
+//    @Qualifier(value = "connectionMongoDB")
+//    private final Connection connection;
 
     @GetMapping
     public ResponseEntity<List<ProducerGetResponse>> findAll(@RequestParam(required = false) String name) {
@@ -42,7 +41,7 @@ public class ProducerController {
     @GetMapping("{id}")
     public ResponseEntity<ProducerGetResponse> filterById(@PathVariable Long id) {
         log.debug("Request to find producer by id: '{}'", id);
-        log.debug("'{}'", connection); //injetado e buscando
+//        log.debug("'{}'", connection); //injetado e buscando
 
         var producer = service.findByIdOrThrowNotFound(id);
 
@@ -52,7 +51,7 @@ public class ProducerController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key=1234")
-    public ResponseEntity<ProducerPostResponse> save(@RequestBody ProducerPostRequest producerPostRequest) {
+    public ResponseEntity<ProducerPostResponse> save(@RequestBody @Valid ProducerPostRequest producerPostRequest) {
 
         log.debug("Request do save Producer '{}'", producerPostRequest.getName());
 

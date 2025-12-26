@@ -1,5 +1,6 @@
 package study.ronoyaro.controller;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -35,7 +36,7 @@ class ProducerControllerTest {
 
     @Autowired
     private MockProducerListUtils producerListUtils;
-    
+
     private List<Producer> producerList;
 
     @Autowired
@@ -43,8 +44,8 @@ class ProducerControllerTest {
 
     @SpyBean
     private ProducerHardCodedRepository repository;
-    
-    
+
+
     @BeforeEach
     void init() {
         producerList = producerListUtils.getList();
@@ -228,6 +229,28 @@ class ProducerControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer not found"));
+
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("POST v1/producers returns bad request when field name is null")
+    void save_ReturnsBadRequest_WhenNameIsNull() throws Exception {
+
+        var request = fileUtils.readResourceFile("producer/post-producer-empty-name-400.json");
+
+        var result = mockMvc.perform(MockMvcRequestBuilders.post("/v1/producers").content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("x-api-key", "1234")
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var exception = result.getResolvedException();
+
+        Assertions.assertThat(exception).isNotNull();
+
+        Assertions.assertThat(exception.getMessage()).contains("The field 'name' is required");
 
     }
 

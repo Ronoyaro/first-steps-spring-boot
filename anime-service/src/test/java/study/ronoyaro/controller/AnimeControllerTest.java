@@ -166,7 +166,7 @@ class AnimeControllerTest {
     void update_UpdatesAnAnime_WhenSuccessful() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
-        var request = fileUtils.readResourceFile("anime/put-anime-request-200.json");
+        var request = fileUtils.readResourceFile("anime/put-anime-request-204.json");
 
 
         mockMvc.perform(MockMvcRequestBuilders.put("/v1/animes")
