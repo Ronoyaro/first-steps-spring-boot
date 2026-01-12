@@ -1,4 +1,4 @@
-package study.ronoyaro.response;
+package study.ronoyaro.producer;
 
 import lombok.Builder;
 import lombok.Getter;

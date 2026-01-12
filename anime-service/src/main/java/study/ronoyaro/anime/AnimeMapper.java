@@ -1,13 +1,9 @@
-package study.ronoyaro.mapper;
+package study.ronoyaro.anime;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import study.ronoyaro.domain.Anime;
-import study.ronoyaro.request.AnimePostRequest;
-import study.ronoyaro.request.AnimePutRequest;
-import study.ronoyaro.response.AnimeGetResponse;
-import study.ronoyaro.response.AnimePostResponse;
 
 import java.util.List;
 

@@ -11,7 +11,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProducerHardCodedRepository {
     private final ProducerData producerData;
-    
+
     public List<Producer> findAll() {
         return producerData.getProducers();
     }

@@ -1,4 +1,4 @@
-package study.ronoyaro.request;
+package study.ronoyaro.producer;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

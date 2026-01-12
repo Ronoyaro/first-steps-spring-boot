@@ -1,4 +1,4 @@
-package study.ronoyaro.controller;
+package study.ronoyaro.producer;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.ronoyaro.domain.Producer;
-import study.ronoyaro.mapper.ProducerMapper;
-import study.ronoyaro.request.ProducerPostRequest;
-import study.ronoyaro.request.ProducerPutRequest;
-import study.ronoyaro.response.ProducerGetResponse;
-import study.ronoyaro.response.ProducerPostResponse;
-import study.ronoyaro.service.ProducerService;
 
 import java.util.List;
 

@@ -1,16 +1,18 @@
 package study.ronoyaro.repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import study.ronoyaro.config.Connection;
+import study.ronoyaro.config.ConnectionBeanConfiguration;
 import study.ronoyaro.domain.Anime;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class AnimeHardCodedRepository {
     private final AnimeData animeData;
 

@@ -7,56 +7,51 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import study.ronoyaro.anime.AnimeController;
 import study.ronoyaro.commons.FileUtils;
 import study.ronoyaro.commons.MockAnimeListUtils;
 import study.ronoyaro.domain.Anime;
-import study.ronoyaro.repository.AnimeData;
-import study.ronoyaro.repository.AnimeHardCodedRepository;
+import study.ronoyaro.anime.AnimeRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@WebMvcTest
+@WebMvcTest(controllers = AnimeController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = "study.ronoyaro")
+@ComponentScan(basePackages = {"study.ronoyaro.anime", "study.ronoyaro.commons"})
 @Log4j2
 class AnimeControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private AnimeData animeData;
-
     @Autowired
     private FileUtils fileUtils;
+
+    @MockBean
+    private AnimeRepository repository;
 
     @Autowired
     private MockAnimeListUtils mockAnimeListUtils;
 
     private List<Anime> animeList;
 
-    @SpyBean
-    private AnimeHardCodedRepository repository;
-
     @BeforeEach
     void init() {
         animeList = mockAnimeListUtils.getList();
     }
 
-
     @Test
     @Order(1)
     @DisplayName("GET /v1/animes list all animes when the argument name is null")
     void listAll_ReturnsAllAnimes_WhenNameArgumentIsNull() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
+        BDDMockito.when(repository.findAll()).thenReturn(animeList);
 
         var response = fileUtils.readResourceFile("anime/get-anime-response-200.json");
 
@@ -68,12 +63,18 @@ class AnimeControllerTest {
 
     @Test
     @Order(2)
-    @DisplayName("GET /v1/animes?name='Steins Gate' returns a animes list that matches with the given argument name")
+    @DisplayName("GET /v1/animes?name='Fate Zero' returns a animes list that matches with the given argument name")
     void listAll_ReturnsAnAnimeList_WhenAnimeNameExists() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
+        String name = "Fate Zero";
+
+        var listAnimeExpected = animeList.stream()
+                .filter(anime -> anime.getName().equalsIgnoreCase(name))
+                .toList();
+
+        BDDMockito.when(repository.findByNameIgnoreCase(name)).thenReturn(listAnimeExpected);
 
         var response = fileUtils.readResourceFile("anime/get-anime-fatezero-response-200.json");
-        String name = "Fate Zero";
+
 
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes").param("name", name))
                 .andDo(MockMvcResultHandlers.print())
@@ -85,7 +86,6 @@ class AnimeControllerTest {
     @Order(3)
     @DisplayName("GET /v1/animes returns an empty list when the arguments name doesn't exists")
     void listAll_ReturnsAnEmptyList_WhenNameDoesntExists() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         String name = "x";
 
@@ -101,11 +101,16 @@ class AnimeControllerTest {
     @Order(4)
     @DisplayName("GET /v1/animes/{id} returns an anime with id given")
     void findById_ReturnsAnAnimeById_WhenSuccessful() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
-
-        Long id = 2L;
 
         var response = fileUtils.readResourceFile("anime/get-anime-by-id-response-200.json");
+
+        Long id = 2L;
+        var animeFound = animeList.stream()
+                .filter(anime -> anime.getId().equals(id))
+                .findFirst();
+
+        BDDMockito.when(repository.findById(id)).thenReturn(animeFound);
+
 
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
@@ -116,9 +121,8 @@ class AnimeControllerTest {
 
     @Test
     @Order(5)
-    @DisplayName("GET /v1/animes/{id} returns a ResponseStatusException 404 when the anime doesn't exists")
+    @DisplayName("GET /v1/animes/{id} returns a ResponseStatusException 404 when the anime is not found")
     void findById_ReturnsAResponseStatus404_WhenTheAnimeDoesntExists() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         Long id = 99L;
 
@@ -162,12 +166,17 @@ class AnimeControllerTest {
 
     @Test
     @Order(7)
-    @DisplayName("PUT v1/animes/ updates an anime")
+    @DisplayName("PUT v1/animes updates an anime")
     void update_UpdatesAnAnime_WhenSuccessful() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         var request = fileUtils.readResourceFile("anime/put-anime-request-204.json");
 
+        Long id = 1L;
+        var animeFound = animeList.stream()
+                .filter(anime -> anime.getId().equals(id))
+                .findFirst();
+
+        BDDMockito.when(repository.findById(id)).thenReturn(animeFound);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/v1/animes")
                         .content(request)
@@ -181,7 +190,6 @@ class AnimeControllerTest {
     @Order(8)
     @DisplayName("PUT v1/animes throws an ResponseStatusException 404 when the anime doesnt exists")
     void update_ThrowsResponseStatusException_WhenAnimeNotFound() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         var request = fileUtils.readResourceFile("anime/put-anime-request-404.json");
 
@@ -199,9 +207,13 @@ class AnimeControllerTest {
     @Order(9)
     @DisplayName("DELETE v1/animes/{id} removes an Anime")
     void delete_RemovesAnAnime_When_Successful() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
+        Long id = 1L;
+        var animeFound = animeList.stream()
+                .filter(anime -> anime.getId().equals(id))
+                .findFirst();
+        BDDMockito.when(repository.findById(id)).thenReturn(animeFound);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}", animeList.getFirst().getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/animes/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
@@ -212,7 +224,6 @@ class AnimeControllerTest {
     @Order(10)
     @DisplayName("DELETE v1/animes/{id} throws ResponseStatusHTTPException when Anime is Not Found")
     void delete_throwsResponseStatusException404_whenAnimeIsNotFound() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         Long id = 99L;
 

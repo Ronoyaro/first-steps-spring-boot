@@ -1,4 +1,4 @@
-package study.ronoyaro.response;
+package study.ronoyaro.producer;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class AnimePostResponse {
+public class ProducerPostResponse {
     private Long id;
     private String name;
     private LocalDateTime createdAt;

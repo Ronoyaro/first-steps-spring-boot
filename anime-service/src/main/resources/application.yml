@@ -3,6 +3,14 @@ spring:
     active: mongo
   application:
     name: anime-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/anime_service?useTimeZone=true&serverTimeZone=UTC&createDatabaseIfNotExist=true
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
   threads:
     virtual:
       enabled: true
@@ -17,3 +25,7 @@ server:
   tomcat:
     threads:
       max: 20
+database:
+  url: ${DB_URL:localhost}:${DB_PORT:3306}
+  username: ${LOCAL_USERNAME:admin}
+  password: ${LOCAL_PASSWORD:root}

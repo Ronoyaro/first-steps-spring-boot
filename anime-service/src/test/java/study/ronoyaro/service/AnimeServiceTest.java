@@ -9,9 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
+import study.ronoyaro.anime.AnimeService;
 import study.ronoyaro.commons.MockAnimeListUtils;
 import study.ronoyaro.domain.Anime;
-import study.ronoyaro.repository.AnimeHardCodedRepository;
+import study.ronoyaro.anime.AnimeRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -26,7 +27,7 @@ class AnimeServiceTest {
     private AnimeService service;
 
     @Mock
-    private AnimeHardCodedRepository repository;
+    private AnimeRepository repository;
 
     @InjectMocks
     private MockAnimeListUtils animeListUtils;
@@ -42,8 +43,7 @@ class AnimeServiceTest {
     @Order(1)
     @DisplayName("listAll returns an Anime List when the name argument is null")
     void listAll_ReturnsAnAnimeList_WhenNameArgumentIsNull() {
-
-        BDDMockito.when(repository.listAll()).thenReturn(animeList);
+        BDDMockito.when(repository.findAll()).thenReturn(animeList);
 
         var listAnimeExpected = service.findAll(null);
 
@@ -60,7 +60,7 @@ class AnimeServiceTest {
 
         var singletonList = singletonList(anime);
 
-        BDDMockito.when(repository.findByName(anime.getName())).thenReturn(singletonList);
+        BDDMockito.when(repository.findByNameIgnoreCase(anime.getName())).thenReturn(singletonList);
 
         var animeListExpected = service.findAll(anime.getName());
 
@@ -73,7 +73,7 @@ class AnimeServiceTest {
     @DisplayName("listAll returns an empty list when the name is not found")
     void listAll_ReturnsAnEmptyList_WhenTheNameIsNotFound() {
 
-        BDDMockito.when(repository.findByName("xaxa")).thenReturn(Collections.emptyList());
+        BDDMockito.when(repository.findByNameIgnoreCase("xaxa")).thenReturn(Collections.emptyList());
 
         var animeListEmptyExpected = service.findAll("xaxa");
 
@@ -165,7 +165,7 @@ class AnimeServiceTest {
 
         BDDMockito.when(repository.findById(animeToUpdate.getId())).thenReturn(Optional.of(animeToUpdate));
 
-        BDDMockito.doNothing().when(repository).update(animeToUpdate);
+        BDDMockito.when(repository.save(animeToUpdate)).thenReturn(animeToUpdate);
 
         Assertions.assertThatNoException()
                 .isThrownBy(() -> service.update(animeToUpdate));

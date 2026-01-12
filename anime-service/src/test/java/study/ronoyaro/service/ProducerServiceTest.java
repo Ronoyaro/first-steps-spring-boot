@@ -12,7 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 import study.ronoyaro.commons.MockProducerListUtils;
 import study.ronoyaro.domain.Producer;
-import study.ronoyaro.repository.ProducerHardCodedRepository;
+import study.ronoyaro.producer.ProducerService;
+import study.ronoyaro.repository.ProducerRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -24,8 +25,10 @@ import java.util.Optional;
 class ProducerServiceTest {
     @InjectMocks
     private ProducerService service;
+
     @Mock
-    private ProducerHardCodedRepository repository;
+    private ProducerRepository repository;
+
     @InjectMocks
     private MockProducerListUtils producersUtils;
 
@@ -57,7 +60,7 @@ class ProducerServiceTest {
 
         var producersExpected = singletonList(producer);
 
-        BDDMockito.when(repository.findByName(producer.getName()))
+        BDDMockito.when(repository.findByNameIgnoreCase(producer.getName()))
                 .thenReturn(producersExpected);
 
         Assertions
@@ -71,8 +74,10 @@ class ProducerServiceTest {
     @DisplayName("findAll returns a empty list when doesn's exists a producer")
     void findAll_ReturnsAEmptyList_WhenProducerIsNotFound() {
 
-        BDDMockito.when(repository.findByName("xaxa")).thenReturn(Collections.emptyList());
+        BDDMockito.when(repository.findByNameIgnoreCase("xaxa")).thenReturn(Collections.emptyList());
+
         var producersEmptyExpected = service.findAll("xaxa");
+
         Assertions.assertThat(producersEmptyExpected)
                 .isNotNull()
                 .isEmpty();
@@ -158,7 +163,6 @@ class ProducerServiceTest {
 
         BDDMockito.when(repository.findById(producerToUpdate.getId())).thenReturn(Optional.of(producerToUpdate));
 
-        BDDMockito.doNothing().when(repository).update(producerToUpdate);
 
         Assertions
                 .assertThatNoException()

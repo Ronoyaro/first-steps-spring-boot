@@ -1,4 +1,4 @@
-package study.ronoyaro.response;
+package study.ronoyaro.anime;
 
 import lombok.Builder;
 import lombok.Getter;

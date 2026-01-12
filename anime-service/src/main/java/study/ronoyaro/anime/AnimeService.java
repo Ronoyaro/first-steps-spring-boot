@@ -1,22 +1,20 @@
-package study.ronoyaro.service;
+package study.ronoyaro.anime;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import study.ronoyaro.domain.Anime;
-import study.ronoyaro.repository.AnimeHardCodedRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AnimeService {
-    private final AnimeHardCodedRepository repository;
-
+    private final AnimeRepository repository;
 
     public List<Anime> findAll(String name) {
-        return name == null ? repository.listAll() : repository.findByName(name);
+        return name == null ? repository.findAll() : repository.findByNameIgnoreCase(name);
     }
 
     public Anime findByIdOrThrowNotFound(Long id) {
@@ -36,6 +34,6 @@ public class AnimeService {
     public void update(Anime animeToUpdate) {
         Anime anime = findByIdOrThrowNotFound(animeToUpdate.getId());
         animeToUpdate.setCreatedAt(anime.getCreatedAt());
-        repository.update(animeToUpdate);
+        repository.save(animeToUpdate);
     }
 }

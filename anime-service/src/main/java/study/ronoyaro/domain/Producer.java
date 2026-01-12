@@ -1,7 +1,7 @@
 package study.ronoyaro.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,11 +11,17 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(of = "id")
+@Entity
+@Table
+@AllArgsConstructor
+@NoArgsConstructor
 public class Producer {
-    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonProperty("name") //Serve para serialização do Jackson quando a requisição pode vir com outro nome no atributo
+    //    @JsonProperty("name") //Serve para serialização do Jackson quando a requisição pode vir com outro nome no atributo
+    @Column(nullable = false)
     private String name;
     private LocalDateTime createdAt;
 }

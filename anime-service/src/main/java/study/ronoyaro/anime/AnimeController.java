@@ -1,4 +1,4 @@
-package study.ronoyaro.controller;
+package study.ronoyaro.anime;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,12 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.ronoyaro.domain.Anime;
-import study.ronoyaro.mapper.AnimeMapper;
-import study.ronoyaro.request.AnimePostRequest;
-import study.ronoyaro.request.AnimePutRequest;
-import study.ronoyaro.response.AnimeGetResponse;
-import study.ronoyaro.response.AnimePostResponse;
-import study.ronoyaro.service.AnimeService;
 
 import java.util.List;
 

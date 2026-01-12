@@ -1,13 +1,9 @@
-package study.ronoyaro.mapper;
+package study.ronoyaro.producer;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import study.ronoyaro.domain.Producer;
-import study.ronoyaro.request.ProducerPostRequest;
-import study.ronoyaro.request.ProducerPutRequest;
-import study.ronoyaro.response.ProducerGetResponse;
-import study.ronoyaro.response.ProducerPostResponse;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package external.dependecy;
+package study.ronoyaro.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

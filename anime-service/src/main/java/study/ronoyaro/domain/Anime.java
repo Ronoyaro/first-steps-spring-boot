@@ -1,5 +1,6 @@
 package study.ronoyaro.domain;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -9,10 +10,18 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(of = "id")
+@AllArgsConstructor
+@NoArgsConstructor
+@Table
+@Entity
 public class Anime {
-    @EqualsAndHashCode.Include //Estou dizendo que o ID é o mesmo que tá sendo comparado
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
     private LocalDateTime createdAt;
 }
+
+

@@ -1,4 +1,4 @@
-package study.ronoyaro.request;
+package study.ronoyaro.anime;
 
 import lombok.Getter;
 import lombok.Setter;

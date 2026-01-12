@@ -1,21 +1,21 @@
-package study.ronoyaro.service;
+package study.ronoyaro.producer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import study.ronoyaro.domain.Producer;
-import study.ronoyaro.repository.ProducerHardCodedRepository;
+import study.ronoyaro.repository.ProducerRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProducerService {
-    private final ProducerHardCodedRepository repository;
+    private final ProducerRepository repository;
 
     public List<Producer> findAll(String name) {
-        return name == null ? repository.findAll() : repository.findByName(name);
+        return name == null ? repository.findAll() : repository.findByNameIgnoreCase(name);
     }
 
     public Producer findByIdOrThrowNotFound(Long id) {
@@ -35,7 +35,7 @@ public class ProducerService {
     public void update(Producer producerToUpdate) {
         Producer producer = findByIdOrThrowNotFound(producerToUpdate.getId());
         producerToUpdate.setCreatedAt(producer.getCreatedAt());
-        repository.update(producerToUpdate);
+        repository.save(producerToUpdate);
     }
 
 }
