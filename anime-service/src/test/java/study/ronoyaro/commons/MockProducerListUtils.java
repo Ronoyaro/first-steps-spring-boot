@@ -1,7 +1,7 @@
 package study.ronoyaro.commons;
 
 import org.springframework.stereotype.Component;
-import study.ronoyaro.domain.Producer;
+import study.ronoyaro.producer.domain.Producer;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 public class MockProducerListUtils {
-    private List<Producer> list;
+    private final List<Producer> list;
 
     public MockProducerListUtils() {
         var dateTime = "2025-12-18T16:39:24.3500076";
