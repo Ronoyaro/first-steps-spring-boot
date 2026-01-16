@@ -1,4 +1,4 @@
-package study.ronoyaro.producer.exception;
+package study.ronoyaro.exception;
 
 public record ErrorMessageDefault(Integer status, String message) {
 }

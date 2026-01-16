@@ -3,8 +3,8 @@ package study.ronoyaro.anime.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import study.ronoyaro.anime.domain.Anime;
-import study.ronoyaro.anime.exception.NotFoundException;
 import study.ronoyaro.anime.repository.AnimeRepository;
+import study.ronoyaro.exception.NotFoundException;
 
 import java.util.List;
 
