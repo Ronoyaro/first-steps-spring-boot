@@ -1,6 +1,8 @@
 package study.ronoyaro.anime.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import study.ronoyaro.anime.domain.Anime;
 import study.ronoyaro.anime.repository.AnimeRepository;
@@ -15,6 +17,10 @@ public class AnimeService {
 
     public List<Anime> findAll(String name) {
         return name == null ? repository.findAll() : repository.findByNameIgnoreCase(name);
+    }
+
+    public Page<Anime> findAllPaginated(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Anime findByIdOrThrowNotFound(Long id) {

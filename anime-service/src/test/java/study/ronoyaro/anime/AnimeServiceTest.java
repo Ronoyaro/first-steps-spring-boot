@@ -8,6 +8,9 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 import study.ronoyaro.anime.domain.Anime;
 import study.ronoyaro.anime.repository.AnimeRepository;
@@ -40,8 +43,8 @@ class AnimeServiceTest {
 
     @Test
     @Order(1)
-    @DisplayName("listAll returns an Anime List when the name argument is null")
-    void listAll_ReturnsAnAnimeList_WhenNameArgumentIsNull() {
+    @DisplayName("findAll returns an Anime List when the name argument is null")
+    void findAll_ReturnsAnAnimeList_WhenNameArgumentIsNull() {
         BDDMockito.when(repository.findAll()).thenReturn(animeList);
 
         var listAnimeExpected = service.findAll(null);
@@ -52,9 +55,28 @@ class AnimeServiceTest {
     }
 
     @Test
+    @Order(1)
+    @DisplayName("findAllPaginated returns a paginated list of animes ")
+    void findAllPaginated_ReturnsAPaginatedAnimes_WhenSuccessful() {
+
+        var pageRequest = PageRequest.of(0, animeList.size());
+        var animePage = new PageImpl<>(animeList, pageRequest, 1);
+
+        BDDMockito.when(repository.findAll(BDDMockito.any(Pageable.class))).thenReturn(animePage);
+
+        //Page request pois estamos fazendo a requisição da pagina 0 com a quantidade de items da animeList
+        var animesPageableExpected = service.findAllPaginated(pageRequest);
+
+        Assertions.assertThat(animesPageableExpected)
+                .isNotNull()
+                .hasSameElementsAs(animeList);
+
+    }
+
+    @Test
     @Order(2)
-    @DisplayName("listAll returns a list with animes founds when the name passed by argument exists")
-    void listAll_ReturnsAnAnimeList_WhenTheNameArgumentExists() {
+    @DisplayName("findAll returns a list with animes founds when the name passed by argument exists")
+    void findAll_ReturnsAnAnimeList_WhenTheNameArgumentExists() {
         var anime = animeList.getFirst();
 
         var singletonList = singletonList(anime);
@@ -69,8 +91,8 @@ class AnimeServiceTest {
 
     @Test
     @Order(3)
-    @DisplayName("listAll returns an empty list when the name is not found")
-    void listAll_ReturnsAnEmptyList_WhenTheNameIsNotFound() {
+    @DisplayName("findAll returns an empty list when the name is not found")
+    void findAll_ReturnsAnEmptyList_WhenTheNameIsNotFound() {
 
         BDDMockito.when(repository.findByNameIgnoreCase("xaxa")).thenReturn(Collections.emptyList());
 

@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -52,7 +55,7 @@ class AnimeControllerTest {
     @Test
     @Order(1)
     @DisplayName("GET /v1/animes list all animes when the argument name is null")
-    void listAll_ReturnsAllAnimes_WhenNameArgumentIsNull() throws Exception {
+    void findAll_ReturnsAllAnimes_WhenNameArgumentIsNull() throws Exception {
         BDDMockito.when(repository.findAll()).thenReturn(animeList);
 
         var response = fileUtils.readResourceFile("anime/get-anime-null-argument-name-200.json");
@@ -64,9 +67,28 @@ class AnimeControllerTest {
     }
 
     @Test
+    @Order(1)
+    @DisplayName("GET /v1/animes/paginated returns a paginated list with all animes")
+    void findAllPaginated_ReturnsAnimesPaginated_WhenSuccessful() throws Exception {
+        BDDMockito.when(repository.findAll()).thenReturn(animeList);
+
+        var response = fileUtils.readResourceFile("anime/get-anime-paginated-200.json");
+
+        var pageRequest = PageRequest.of(0, animeList.size());
+        var animePage = new PageImpl<Anime>(animeList, pageRequest, 1);
+
+        BDDMockito.when(repository.findAll(BDDMockito.any(Pageable.class))).thenReturn(animePage);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/animes/paginated"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
     @Order(2)
     @DisplayName("GET /v1/animes?name=Fate+Zero returns a animes list that matches with the given argument name")
-    void listAll_ReturnsAnAnimeList_WhenAnimeNameExists() throws Exception {
+    void findAll_ReturnsAnAnimeList_WhenAnimeNameExists() throws Exception {
         var response = fileUtils.readResourceFile("anime/get-anime-fatezero-response-200.json");
 
         String name = "Fate Zero";
@@ -87,7 +109,7 @@ class AnimeControllerTest {
     @Test
     @Order(3)
     @DisplayName("GET /v1/animes?name=x returns an empty list when the arguments name doesn't exists")
-    void listAll_ReturnsAnEmptyList_WhenNameDoesntExists() throws Exception {
+    void findAll_ReturnsAnEmptyList_WhenNameDoesntExists() throws Exception {
         var response = fileUtils.readResourceFile("anime/get-anime-empty-response-200.json");
 
         String name = "x";

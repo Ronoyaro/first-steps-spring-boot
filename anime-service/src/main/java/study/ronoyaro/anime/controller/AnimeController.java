@@ -3,6 +3,8 @@ package study.ronoyaro.anime.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +27,9 @@ public class AnimeController {
     private final AnimeService service;
 
     @GetMapping
-    public ResponseEntity<List<AnimeGetResponse>> list(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<AnimeGetResponse>> findAll(@RequestParam(required = false) String name) {
 
-        log.debug("Request received to list all Animes param name '{}'", name);
+        log.debug("Request received to list all animes param name '{}'", name);
 
         var animes = service.findAll(name);
 
@@ -36,8 +38,18 @@ public class AnimeController {
         return ResponseEntity.ok(animeListGetResponses);
     }
 
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<AnimePostResponse>> findAllPaginated(Pageable pageable) {
+
+        log.debug("Request received to list all animes paginated");
+
+        var pageAnime = service.findAllPaginated(pageable).map(mapper::toAnimePostResponse);
+
+        return ResponseEntity.ok(pageAnime);
+    }
+
     @GetMapping("{id}")
-    public ResponseEntity<AnimeGetResponse> filterById(@PathVariable Long id) {
+    public ResponseEntity<AnimeGetResponse> findById(@PathVariable Long id) {
 
         log.debug("Request to find Anime by id: '{}'", id);
 
